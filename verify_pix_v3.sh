@@ -5,7 +5,7 @@
 # Data: 18/08/2021 - Inicio.
 # Data: 20/08/2021 - Adicionado linha que mostra a quantidade de job(s) reiniciados;
 # Versão 2b
-# Data: 01/09/2021 - Adicionado o job PAYMENT_PARTNER para ser processado, pois estava faltando. (Informado pelo @Tiago.lima) 
+# Data: 01/09/2021 - Adicionado o job PAYMENT_PARTNER para ser processado, pois estava faltando.  
 # Versão 2c
 # Data: 20/09/2021 - Adicionado o comando para matar a job PAYMENT_PARNTER via ID, pois o mesmo não deixa subir a execução do
 # job PAYMENT depois que ele cai.
