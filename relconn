@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+## Script para gerar um relatorio de saude da rede.
+## Atenção: Executar como root
+
+## Colors
+
+RED='\e[31m'
+NC='\e[0m'
+
+
+U_SER=$(id -u)
+
+if [ "$U_SER" -ne 0 ]; then
+
+   echo -e "${RED}\nErro! Voce tem que ser root para executar esta tarefa. ${NC}\n" 
+
+else
+
+	rm -f Relatcom*
+
+	touch Relatcom.txt
+
+	RELAT="Relatcom.txt"
+
+	DT=$(date +%d-%m-%Y)
+
+	HRMS=$(date +%H:%M:%S)
+
+	LEAP='echo -e \n'
+
+
+	while true
+	do
+
+		sleep 5 # Atualiza a cada 5 segundos
+		
+		echo -e "\n\nData: $DT - Horario: $HRMS\n" >> $RELAT
+
+		## Verificando as interfaces conectados
+		echo -e "################# [ STATUS DO(S) DISPOSITO(S) DE REDE ] #################\n" >> $RELAT
+		nmcli connection show >> $RELAT
+		$LEAP >> $RELAT
+
+		echo -e "################# [ STATUS DO(S) DISPOSITO(S) DE REDE ATIVO(S) ] #################\n " >> $RELAT
+		nmcli connection show --active >> $RELAT
+		$LEAP >> $RELAT
+
+		## MONITORAR CONEXÕES DE REDE
+		echo -e "################# [ CONEXÕES TCP E DE SOCKETS UTILIZADOS ] #################\n" >> $RELAT 
+		ss -t >> $RELAT
+		$LEAP >> $RELAT
+
+		echo -e "################# [ CONEXÕES UDP E DE SOCKETS UTILIZADOS ] #################\n" >> $RELAT 
+		ss -u >> $RELAT
+		$LEAP >> $RELAT
+
+		echo -e "################# [ SUMARIO DAS CONEXÕES TCP/UDP E DE SOCKETS UTILIZADOS ] #################\n" >> $RELAT 
+		ss -s >> $RELAT
+		#$LEAP >> $RELAT
+
+		## LISTAR ARQUIVOS E PROCESSOS ABERTOS
+		echo -e "################# [ ARQUIVOS E PROCESSOS ABERTOS ] #################\n" >> $RELAT
+		sudo lsof -i >> $RELAT
+
+		#mv $RELAT $RELAT-$DT".txt"
+
+	done
+	echo -e "\n\n"
+
+	#less $RELAT
+fi
