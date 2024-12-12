@@ -1,10 +1,10 @@
 #!/bin/sh
 #
 # Script para iniciar o servico do DSNScript-proxy
-# Versão: 1
 # Desenvolvedor: Cesar A. Camargo
-# 09-12-2024 - Inicio
-# 11-12-2024 - Alterando as mensagem dos processos. 
+# 09-12-2024 - Inicio - Versão: 1.0.0
+# 11-12-2024 - Alterando as mensagem dos processos - Versão: 1.0.1
+ 
 
 ## COLORS
 NC='\e[0m'
