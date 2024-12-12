@@ -3,7 +3,8 @@
 # Script para iniciar o servico do DSNScript-proxy
 # Versão: 1
 # Desenvolvedor: Cesar A. Camargo
-# 09/12/2024 - Inicio
+# 09-12-2024 - Inicio
+# 11-12-2024 - Alterando as mensagem dos processos. 
 
 ## COLORS
 NC='\e[0m'
@@ -13,21 +14,26 @@ RED='\e[31m'
 YELLOW="\e[33m"
 GREEN='\e[32m'
 
-
-echo -e "${YELLOW}\nAtenção! É necessário ser -root- para executar este script.${NC}"
-
-sleep 3 && tput clear;
-
 DNSPRXPID="/opt/dnscrypt-proxy/dnscrypt-proxy.pid"
+
+
+echo -e "${YELLOW}\nVerificando se tem permissão de -root- para executar este script.${NC}"
+
+echo -ne "${YELLOW}\nAguarde... "
+
+sleep 2 && tput clear;
+
 
 ## Verificando se o usuario é root
 U_SER=$(id -u)
 
 if [ "$U_SER" -ne 0 ]; then
 
-    echo -e "${RED}\nErro! Voce tem que ser root para executar esta tarefa.${NC}\n" 
+    echo -e "${RED}\nErro! SEM PERMISSAO ! Precisa ser -root- para executar esta tarefa.${NC}\n" 
 
 else
+
+	echo -e "${GREEN}[ Ok ]" && sleep 1
 
 	FILE_CONF="/opt/dnscrypt-proxy/dnscrypt-proxy.toml"
 	FILE_RESOLV="/etc/resolv.conf"
