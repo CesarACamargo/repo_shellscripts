@@ -2,10 +2,14 @@
 #
 # Script para iniciar o servico do DSNScript-proxy
 # Desenvolvedor: Cesar A. Camargo
-# 09-12-2024 - Inicio - Versão: 1.0.0
-# 11-12-2024 - Versão: 1.0.1: Alterando as mensagem dos processos; consolidando as opçoes do menu;
-#			   Melhorando as estruturas dos codigos; reformatando o layout do menu; adicionado uma
-#			   condição para validar se o serviço esta em execução.
+#
+# Versão: 1.0.0
+# 09-12-2024 - Inicio
+# Versão: 1.0.1 
+# 11-12-2024 - Alterando as mensagem dos processos; consolidando as opçoes do menu; melhorando as estruturas dos codigos; 
+# reformatando o layout do menu; adicionado uma condição para validar se o serviço esta em execução.
+# Versão: 1.0.1b
+# 15-12-2024 - Refazendo o comando -ps- com -grep- para serem mais diretos no resultado.
 
 
 ## COLORS
@@ -16,14 +20,12 @@ RED='\e[31m'
 YELLOW="\e[33m"
 GREEN='\e[32m'
 
-
 ## VARIAVEIS
 U_SER=$(id -u)
 DNSPRXPID="/opt/dnscrypt-proxy/dnscrypt-proxy.pid"
 FILE_CONF="/opt/dnscrypt-proxy/dnscrypt-proxy.toml"
 FILE_RESOLV="/etc/resolv.conf"
 FILE_RESOLVBKP="/etc/resolv.conf.bkp"
-
 
 ## Verificando se o usuario é root
 echo -e "${YELLOW}\nVerificando se tem permissão de -root- para executar este script.${NC}"
@@ -57,7 +59,7 @@ else
 
 		sleep 5; echo -e "\t Ok${NC}\n"
 		
-		sleep 2; ps aux | grep dnscrypt-proxy | grep -E '^root' | head -n 1
+		sleep 2; ps ef | grep dnscrypt-'[proxy]'
 		
 		echo -e "\n" && sleep 4
 		
@@ -97,7 +99,7 @@ else
 		
 		sleep 5; echo -e "\t[Ok] ${NC}\n" 
 
-		sleep 2; ps aux | grep dnscrypt-proxy | grep -E '^root' | head -n 1
+		sleep 2; ps -ef | grep dnscrypt-'[proxy]' 
 		
 		echo -e "\n" && sleep 4
 		
@@ -135,7 +137,7 @@ echo -e "${BLUE}
  4 -> Restaurar configuração s/ DNScrypt-proxy
  5 ->> Sair
 ===============================================${NC}\n"
-	read -r -n1 -p "Selecione uma das opções acima: " OPCS
+	read -r -p "Selecione uma das opções acima: " OPCS
 
 	case $OPCS in
 
