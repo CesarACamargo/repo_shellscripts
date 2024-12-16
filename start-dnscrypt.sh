@@ -10,7 +10,9 @@
 # reformatando o layout do menu; adicionado uma condição para validar se o serviço esta em execução.
 # Versão: 1.0.1b
 # 15-12-2024 - Refazendo o comando -ps- com -grep- para serem mais diretos no resultado.
-
+# Versão: 1.0.2
+# 16-12-2024 - Removido a função 'restart()' pois não era necessario nesse contexto e o MENU de opções foi remodelado.
+#
 
 ## COLORS
 NC='\e[0m'
@@ -72,34 +74,12 @@ else
 	## Verifica se o serviço esta em execução
 		
 		[ ! -f "$DNSPRXPID" ] && { echo -e "\n\n${RED}ERRO: O DNScrypt-proxy não esta em execução !!! ${NC}\n"; exit; }
-		
+
 		echo -ne "${BOLD}\n\nParando o serviço DNScrypt-proxy..."
 
 		kill -15 $(< $DNSPRXPID) && echo -e "${GREEN}\tOk ${NC}\n"
 		
 		rm -f $DNSPRXPID
-		
-		echo -e "\n" && sleep 4
-		
-		## Comando ss
-		ss -lp 'sport = :domain'
-	}
-
-	restart(){
-	
-		stop;
-			
-		echo -e "${GREEN}\n\nIniciando o serviço DNScript-proxy !!!\n"
-		
-		echo -ne "\nAguarde... " 
-		
-		/opt/dnscrypt-proxy/dnscrypt-proxy -config $FILE_CONF &
-
-		pgrep dnscrypt-proxy > $DNSPRXPID
-		
-		sleep 5; echo -e "\t[Ok] ${NC}\n" 
-
-		sleep 2; ps -ef | grep dnscrypt-'[proxy]' 
 		
 		echo -e "\n" && sleep 4
 		
@@ -132,21 +112,19 @@ else
 echo -e "${BLUE}
 ===================[ MENU ]====================
  1 -> Iniciar serviço
- 2 -> Parar serviço
- 3 -> Reiniciar
- 4 -> Restaurar configuração s/ DNScrypt-proxy
- 5 ->> Sair
+ 2 -> Reiniciar
+ 3 -> Parar o serviço e restaurar a configuração s/ DNScrypt-proxy
+ 4 ->> Sair
 ===============================================${NC}\n"
 	read -r -p "Selecione uma das opções acima: " OPCS
 
 	case $OPCS in
 
 		1) start ;;
-		2) stop ;;
-		3) restart ;;
-		4) restaura ;;
-		5) echo -e "\n" & exit ;;
-		*) echo -e "\nUsar uma das opcoes: { 1|2|3|4|5 }\n" 
+		2) stop ; restaura ; start ;;
+		3) stop ; restaura ;;
+		4) echo -e "\n" & exit ;;
+		*) echo -e "\nUsar uma das opcoes: { 1|2|3|4 }\n" 
 
 	esac
 fi
