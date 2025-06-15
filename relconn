@@ -56,7 +56,7 @@ else
 		$LEAP >> $RELAT
 
 		echo -e "################# [ SUMARIO DAS CONEXÕES TCP/UDP E DE SOCKETS UTILIZADOS ] #################\n" >> $RELAT 
-		ss -s >> $RELAT
+		ss -s | column -t >> $RELAT
 		#$LEAP >> $RELAT
 
 		## LISTAR ARQUIVOS E PROCESSOS ABERTOS
