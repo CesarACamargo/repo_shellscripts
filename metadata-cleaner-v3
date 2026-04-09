@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+#
+# Script para remoção de metadados dos arquivos
+# Versão 2
+# Data: 04/2026
+# Dev: c4.camargo@hotmail.com
+
+
+set -e 
+
+##################### [  Funcoes ] ######################################
+meta_png ()
+{
+    if find ~/Imagens/metadts/*.png >> /dev/null; then 
+
+        find $HOME/Imagens/metadts/* -type f -iname "*.png" >> arq.txt
+
+        [ -s arq.txt ] && rm_meta
+
+    else
+        dialog --title 'ERRO:' --infobox 'Arquivo(s) PNG não localizado(s) !' 5 40; sleep 2; clear
+
+    fi
+}
+
+meta_jpg ()
+{
+
+    if find ~/Imagens/metadts/*.jpg >> /dev/null; then 
+
+        find $HOME/Imagens/metadts/* -type f -iname "*.jpg" >> arq.txt
+
+        [ -s arq.txt ] && rm_meta
+
+    else
+        dialog --title 'ERRO:' --infobox 'Arquivo(s) JPG não localizado(s) !' 5 40; sleep 2; clear
+
+    fi
+}
+
+meta_jpeg ()
+{
+
+    if find ~/Imagens/metadts/*.jpeg >> /dev/null; then 
+
+        find $HOME/Imagens/metadts/* -type f -iname "*.jpeg" >> arq.txt
+
+        [ -s arq.txt ] && rm_meta
+
+    else
+        dialog --title 'ERRO:' --infobox 'Arquivo(s) JPEG não localizado(s) !' 5 40; sleep 2; clear
+
+    fi
+}
+
+rm_meta ()
+{
+# Varrendo cada linha para remocao do metadata 
+ for i in $(< arq.txt)
+ do
+     dialog --title 'Removendo Metadata(s):' --infobox "${i}" 0 0 
+     exiftool -q -all= ${i} 
+ done
+
+ QTD=$(wc -l < arq.txt)
+
+ dialog --title 'Resultado:' --infobox "Metadado(s) removido(s): $QTD" 5 40; sleep 2; clear
+
+# Removendo lixo
+    rm -f arq.txt
+    rm -f $(find $HOME/Imagens/metadts/* -type f -iname "*original")
+}
+
+#################[ Linhas de Comandos ]##############################
+
+opc=$( dialog --stdout --backtitle 'Remover Metadata' \
+    --menu 'Selecione:' 0 0 0      \
+    1 'Limpar PNG'      \
+    2 'Limpar JPG'      \
+    3 'Limpar JPEG'     \
+    4 'Sair >'          )
+
+# Apertou CANCELAR ou ESC para sair...
+[ $? -ne 0 ] && exit 
+
+# De acordo com a opcao escolhida dispara a funcao...
+case $opc in
+
+	1) meta_png
+        ;;
+	2) meta_jpg
+        ;;
+	3) meta_jpeg
+        ;;
+    4) clear; exit
+        ;;
+    *) dialog --title 'ERRO:' --infobox 'Usar uma das opcoes: { 1|2|3|4 }'; clear
+        ;;
+esac
+
