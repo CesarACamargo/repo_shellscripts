@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 #
 # Script para gerar backup de uma dada pasta
-# Versão: 5 
+# Versão: 8.1 
 # Desenvolvedor: Cesar A. Camargo
 # 17-09-2021 - Reescrição das linhas de teste de condição que estavam utilizando os "ifs". 
 # 20-11-2024 - Reescrição das linhas que contém os comandos de compactação deixando-os mais simplificados. 
-# 09/04/2026 - Inserido no codigo o programa para console Dialog que desenha caixas de dialogos na tela, similares as do modo
+# 09-04-2026 - Inserido no codigo o programa para console Dialog que desenha caixas de dialogos na tela, similares as do modo
 #               gráfico, com botões, entradas para texto e menu.
+# 06-05-2026 - Adicionado a opcao 'prgbox' do comando dialog para monstrar a tela de execucao do programa.
 
-#origem=$1
-origem=$( dialog --stdout --backtitle 'Entrada de Dados' --inputbox "Insira o arquivo ou pasta:" 0 0 )
+
+origem=$( dialog --stdout --backtitle 'Entrada de Dados' --inputbox "Insira o nome do arquivo ou da pasta:" 0 0 )
 
 ## Verificar se foi fornecido parâmetro
 [ -z $origem ] && { dialog --title 'ERRO:' --infobox "\nDados não encontrado ou campo vazio! " 5 40; sleep 2; clear; }
@@ -23,9 +24,13 @@ data=$(date +%d%m%Y)
 
 function _ZIP {
 
-    dialog --title 'Processando...' --infobox "\nCompactando $origem ..." 5 40; sleep 2 ;
+cmd="zip -r \"Backup_${origem}-${data}.zip\" \"$origem\""
 
-    zip -qr "Backup_$origem-$data.zip" "$origem"
+    dialog --backtitle 'gerabkp v8.1' \
+            --title ' Gerando backup no formato [ gzip ] ' \
+            --prgbox "Compactando $origem" "$cmd" \
+                    $(( $(tput lines) - 8)) \
+                    $(( $(tput cols) - 10))
 
     dialog --title 'Finalizado' --infobox "\nBackup em ZIP criado com sucesso em $(pwd)" 5 90; sleep 2; clear; exit
 }
@@ -46,36 +51,53 @@ function _7z {
     #    Para listar todos os arquivos:
     #    $ 7za l nome-do-arquivo.7z
 
-    dialog --title 'Processando...' --infobox "\nCompactando $origem ..." 5 30 ; sleep 2
 
-    7z a "Backup_$origem-$data.7z" "$origem/*"
+cmd="7z a \"Backup_${origem}-${data}.7z\" \"$origem/*\""
+
+    dialog --backtitle 'gerabkp v8.1' \
+            --title ' Gerando backup no formato [ 7zip ] ' \
+            --prgbox "Compactando $origem" "$cmd" \
+                    $(( $(tput lines) - 8)) \
+                    $(( $(tput cols) - 10))
 
     dialog --title 'Finalizado' --infobox "\nBackup em 7zip criado com sucesso em $(pwd)" 5 90; sleep 2; clear; exit
 }
 
 function Bz2 {
     
-    dialog --title 'Processando...' --infobox "\nCompactando $origem ..." 5 30 ; sleep 2
+cmd="tar -cvjf \"Backup_${origem}-${data}.tar.bz2\" \"$origem\""
 
-    tar -cvjf "Backup_$origem-$data.tar.bz2" "$origem"
+    dialog --backtitle 'gerabkp v8.1' \
+            --title ' Gerando backup no formato [ bzip2 ] ' \
+            --prgbox "Compactando $origem" "$cmd" \
+                    $(( $(tput lines) - 8)) \
+                    $(( $(tput cols) - 10))
 
     dialog --title 'Finalizado' --infobox "\nBackup em Bzip2 criado com sucesso em $(pwd)" 5 90; sleep 2; clear; exit
 }
 
 function Gzip {
 
-    dialog --title 'Processando...' --infobox "\nCompactando $origem ..." 5 30 ; sleep 2
+cmd="tar -cvzf \"Backup_${origem}-${data}.tar.gz\" \"$origem\""
 
-    tar -cvzf "Backup_$origem-$data.tar.gz" "$origem"
+    dialog --backtitle 'gerabkp v8.1' \
+            --title ' Gerando backup no formato [ gzip ] ' \
+            --prgbox "Compactando $origem" "$cmd" \
+                    $(( $(tput lines) - 8)) \
+                    $(( $(tput cols) - 10))
 
     dialog --title 'Finalizado' --infobox "\nBackup em Gzip criado com sucesso em $(pwd)" 5 90; sleep 2; clear; exit
 }
 
 function Xz {
 
-    dialog --title 'Processando...' --infobox "\nCompactando $origem ..." 5 30 ; sleep 2
+cmd="tar -Jcvf \"Backup_${origem}-${data}.tar.xz\" \"$origem\"" 
 
-    tar -Jcvf "Backup_$origem-$data.tar.xz" "$origem" 
+    dialog --backtitle 'gerabkp v8.1' \
+            --title ' Gerando backup no formato [ xz ]' \
+            --prgbox "Compactando $origem" "$cmd" \
+                    $(( $(tput lines) - 8)) \
+                    $(( $(tput cols) - 10))
 
     dialog --title 'Finalizado' --infobox "\nBackup em Xz criado com sucesso em $(pwd)" 5 90; sleep 2; clear; exit
 }
