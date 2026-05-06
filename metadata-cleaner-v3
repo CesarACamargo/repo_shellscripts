@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 #
 # Script para remoção de metadados dos arquivos
-# Versão 2
+# Versão 3
 # Data: 04/2026
 # Dev: c4.camargo@hotmail.com
-
 
 set -e 
 
 ##################### [  Funcoes ] ######################################
 meta_png ()
 {
-    if find ~/Imagens/metadts/*.png >> /dev/null; then 
+    if find "$HOME/Imagens/metadts" -type f -iname "*.png" | grep -q .; then 
 
-        find $HOME/Imagens/metadts/* -type f -iname "*.png" >> arq.txt
+        find "$HOME/Imagens/metadts" -type f -iname "*.png" >> arq.txt
 
         [ -s arq.txt ] && rm_meta
 
@@ -26,9 +25,9 @@ meta_png ()
 meta_jpg ()
 {
 
-    if find ~/Imagens/metadts/*.jpg >> /dev/null; then 
+    if find "$HOME/Imagens/metadts" -type f -iname "*.jpg" | grep -q .; then 
 
-        find $HOME/Imagens/metadts/* -type f -iname "*.jpg" >> arq.txt
+        find "$HOME/Imagens/metadts" -type f -iname "*.jpg" >> arq.txt
 
         [ -s arq.txt ] && rm_meta
 
@@ -41,9 +40,9 @@ meta_jpg ()
 meta_jpeg ()
 {
 
-    if find ~/Imagens/metadts/*.jpeg >> /dev/null; then 
+    if find "$HOME/Imagens/metadts" -type f -iname "*.jpeg" -print -quit | grep -q .; then 
 
-        find $HOME/Imagens/metadts/* -type f -iname "*.jpeg" >> arq.txt
+        find "$HOME/Imagens/metadts" -type f -iname "*.jpeg" >> arq.txt
 
         [ -s arq.txt ] && rm_meta
 
@@ -58,13 +57,18 @@ rm_meta ()
 # Varrendo cada linha para remocao do metadata 
  for i in $(< arq.txt)
  do
-     dialog --title 'Removendo Metadata(s):' --infobox "${i}" 0 0 
-     exiftool -q -all= ${i} 
+
+     dialog --backtitle 'metadata-cleaner v3.1' \
+            --title 'Removendo Metadata(s): ' \
+            --infobox "${i}" 0 0
+
+     exiftool -q -all= ${i}
+
  done
 
  QTD=$(wc -l < arq.txt)
 
- dialog --title 'Resultado:' --infobox "Metadado(s) removido(s): $QTD" 5 40; sleep 2; clear
+ dialog --title 'Resultado:' --infobox "Metadado(s) removido(s): ${QTD}" 5 40; sleep 2; clear
 
 # Removendo lixo
     rm -f arq.txt
